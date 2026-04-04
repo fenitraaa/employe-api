@@ -1,20 +1,30 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import express from "express";
+import dotenv from 'dotenv';
+import express from 'express';
+import connectDB from './config/db.js';
+import authRoutes from './routers/authRoutes.js';
+import employeeRoutes from './routers/employeeRoutes.js';
+import authenticateToken from './middleware/authMiddleware.js';
 
 dotenv.config();
-const mongoURL = process.env.MONGO_URL;
-const PORT = process.env.PORT;
-const app = express();
 
-mongoose.connect(mongoURL).then(() => {
-    console.log("database is connected");
+const app = express();
+const PORT = process.env.PORT;
+
+app.use(express.json());
+app.use('/auth', authRoutes);
+app.use('/api', authenticateToken, employeeRoutes);
+
+const startServer = async () => {
+  try {
+    await connectDB();
+
     app.listen(PORT, () => {
-        console.log(`server is running on port ${PORT}`);
-    })
-    if (db.employes.contDocuments() === 0) {
-        db.employes.insertOne([
-            { _id: 1, nom: "Fafara Deteline", salaire: 2000.00}
-        ]);
-    }
-}).catch((error) => console.log(error));
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
