@@ -33,9 +33,8 @@ const employeeSchema = new mongoose.Schema(
   }
 );
 
-employeeSchema.pre('save', function preSave(next) {
+employeeSchema.pre('save', async function preSave() {
   this.obs = computeObsFromSalaire(this.salaire);
-  next();
 });
 
 const Employee = mongoose.model('Employee', employeeSchema);

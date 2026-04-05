@@ -3,7 +3,6 @@ import express from 'express';
 import connectDB from './config/db.js';
 import authRoutes from './routers/authRoutes.js';
 import employeeRoutes from './routers/employeeRoutes.js';
-import authenticateToken from './middleware/authMiddleware.js';
 
 dotenv.config();
 
@@ -12,7 +11,7 @@ const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use('/auth', authRoutes);
-app.use('/api', authenticateToken, employeeRoutes);
+app.use('/api', employeeRoutes);
 
 const startServer = async () => {
   try {
